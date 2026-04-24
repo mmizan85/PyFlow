@@ -1,0 +1,355 @@
+/* PyFlow in-page launcher, dropdown, and toast */
+
+#pyflow-root,
+#pyflow-root *,
+#pyflow-overlay,
+#pyflow-overlay * {
+  box-sizing: border-box;
+}
+
+#pyflow-root {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.pyflow-root--inline {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  position: relative;
+  z-index: 2147483645;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+#owner #pyflow-root.pyflow-root--inline {
+  align-self: center;
+}
+
+.pyflow-root--before,
+.pyflow-root--prepend {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+.pyflow-root--after {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+.pyflow-root--fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2147483645;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.pyflow-root--fab.pyflow-root--autohide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pyflow-root--fab.pyflow-root--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pyflow-root--dragging {
+  transition: none;
+}
+
+.pyflow-launcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 5px;
+  border: 1px solid rgba(0, 255, 180, 0.34);
+  border-radius: 20px;
+  margin: 0;
+  background:
+    linear-gradient(135deg, rgba(0, 255, 180, 0.16), rgba(0, 84, 63, 0.1)),
+    rgba(6, 12, 14, 0.92);
+  color: #00ffb4;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.pyflow-root--fab .pyflow-launcher {
+  min-height: 40px;
+  padding: 0 8px;
+  cursor: grab;
+  touch-action: none;
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.42),
+    0 0 22px rgba(0, 255, 180, 0.18);
+}
+
+.pyflow-root--dragging .pyflow-launcher {
+  cursor: grabbing;
+  transform: none;
+}
+
+.pyflow-launcher:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 255, 180, 0.72);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(0, 255, 180, 0.22),
+    inset 0 0 0 1px rgba(0, 255, 180, 0.08);
+}
+
+.pyflow-root--dragging .pyflow-launcher:hover {
+  transform: none;
+}
+
+.pyflow-launcher:focus-visible {
+  outline: none;
+  border-color: rgba(0, 255, 180, 0.92);
+  box-shadow:
+    0 0 0 2px rgba(0, 255, 180, 0.28),
+    0 0 18px rgba(0, 255, 180, 0.24);
+}
+
+.pyflow-launcher:disabled {
+  opacity: 0.82;
+  cursor: wait;
+}
+
+.pyflow-launcher--busy {
+  border-color: rgba(0, 255, 180, 0.64);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 180, 0.18),
+    0 0 18px rgba(0, 255, 180, 0.18);
+}
+
+.pyflow-launcher__icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+
+.pyflow-launcher__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pyflow-launcher__caret {
+  font-size: 11px;
+  opacity: 0.82;
+}
+
+#pyflow-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.pyflow-menu,
+.pyflow-toast {
+  position: fixed;
+  pointer-events: auto;
+}
+
+.pyflow-menu {
+  width: min(320px, calc(100vw - 24px));
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.pyflow-menu--open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.pyflow-menu__glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(0, 255, 180, 0.34), rgba(0, 212, 255, 0.16));
+  filter: blur(14px);
+  opacity: 0.8;
+}
+
+.pyflow-menu__panel {
+  position: relative;
+  border: 1px solid rgba(0, 255, 180, 0.24);
+  border-radius: 18px;
+  padding: 14px;
+  background:
+    radial-gradient(circle at top left, rgba(0, 255, 180, 0.08), transparent 38%),
+    rgba(5, 11, 13, 0.88);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.pyflow-menu__header {
+  margin-bottom: 12px;
+}
+
+.pyflow-menu__title {
+  color: #00ffb4;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pyflow-menu__subtitle {
+  margin-top: 5px;
+  color: rgba(221, 248, 239, 0.72);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.pyflow-menu__list {
+  display: grid;
+  gap: 8px;
+}
+
+.pyflow-menu__option {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid rgba(0, 255, 180, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #ebfff7;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.pyflow-menu__option:hover,
+.pyflow-menu__option:focus-visible {
+  outline: none;
+  transform: translateX(2px);
+  border-color: rgba(0, 255, 180, 0.34);
+  background: rgba(0, 255, 180, 0.08);
+  box-shadow: 0 0 18px rgba(0, 255, 180, 0.12);
+}
+
+.pyflow-menu__option:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.pyflow-menu__option.is-pending {
+  border-color: rgba(0, 255, 180, 0.42);
+  background: rgba(0, 255, 180, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 180, 0.12);
+}
+
+.pyflow-menu__emoji {
+  flex: 0 0 24px;
+  width: 24px;
+  text-align: center;
+  font-size: 17px;
+}
+
+.pyflow-menu__copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pyflow-menu__label {
+  color: #f4fff9;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.pyflow-menu__meta {
+  margin-top: 3px;
+  color: rgba(177, 231, 211, 0.74);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.pyflow-toast {
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border: 1px solid rgba(0, 255, 180, 0.18);
+  border-radius: 16px;
+  background: rgba(7, 13, 15, 0.92);
+  color: #ecfff8;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.42);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.pyflow-toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pyflow-toast--success {
+  border-color: rgba(0, 255, 180, 0.34);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.42),
+    0 0 22px rgba(0, 255, 180, 0.14);
+}
+
+.pyflow-toast--error {
+  border-color: rgba(255, 94, 122, 0.44);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.42),
+    0 0 22px rgba(255, 94, 122, 0.12);
+}
+
+@media (max-width: 640px) {
+  .pyflow-root--before,
+  .pyflow-root--prepend {
+    margin-right: 6px;
+  }
+
+  .pyflow-root--after {
+    margin-left: 6px;
+  }
+
+  .pyflow-root--fab {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .pyflow-launcher {
+    min-height: 36px;
+    padding: 0 14px;
+  }
+}

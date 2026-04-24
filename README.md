@@ -5,7 +5,7 @@ a Python GUI & CLI backend powered by `yt-dlp` and `ffmpeg`. pyFlow is designed 
 
 ---
 <p align="center">
-  <img src="./icons/icon128.png" alt="PyFlow Icon" width="100">
+  <img src="./chrome-extension/icons/icon128.png" alt="PyFlow Icon" width="100">
 </p>
 
 ## 🌟 Features
@@ -48,7 +48,7 @@ a Python GUI & CLI backend powered by `yt-dlp` and `ffmpeg`. pyFlow is designed 
 
 | 📱 Main Controller (Popup) | ⚙️ Advanced Settings |
 | :---: | :---: |
-| ![Popup Preview](/chrome-extension/PyFlow_Popup_window.png) | ![Server Preview](/chrome-extension/PyFlow_Server_window.png) |
+| ![Popup Preview](./chrome-extension/icons/PyFlow_Popup_window.png) | ![Server Preview](./chrome-extension/icons/PyFlow_Server_window.png) |
 
 ---
 ## 📋 Prerequisites
